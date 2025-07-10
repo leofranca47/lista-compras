@@ -48,8 +48,8 @@ class Index extends Component
 
     public function clear(): void
     {
-        $this->reset();
         Item::whereUserId($this->user->id)->get()->each(fn ($item) => $item->delete());
+        $this->reset();
         $this->items = collect();
     }
 
