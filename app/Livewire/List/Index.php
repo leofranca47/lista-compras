@@ -25,7 +25,12 @@ class Index extends Component
             return;
         }
 
-        $this->items = $items->map(fn ($item) => sprintf('%s - %s', $item->product, $item->quantity));
+        $this->items = $items->map(fn ($item) => $this->setItem(
+            $item->id,
+            $item->product,
+            $item->quantity,
+            $item->finish
+        ));
     }
 
     public function render()
@@ -36,12 +41,39 @@ class Index extends Component
     public function save(): void
     {
         $this->validate();
-        Item::create([
-            'product' => $this->item,
+        $item = Item::updateOrCreate(
+            [
+                'product' => mb_strtoupper($this->item),
+            ],
+            [
             'quantity' => $this->quantity,
             'user_id' => $this->user->id,
-        ]);
-        $this->items->push(sprintf('%s - %s', $this->item, $this->quantity));
+        ]
+        );
+
+        $existsItem = array_filter($this->items->toArray(), function ($product) use ($item) {
+            if ($product['id'] === $item->id) {
+                return$product;
+            }
+        });
+        if (empty($existsItem)) {
+            $this->items->push($this->setItem(
+                $item->id,
+                $item->product,
+                $item->quantity,
+                (bool) $item->finish
+            ));
+        } else {
+            $this->items = $this->items->map(function ($product) use ($item) {
+                if ($product['id'] === $item->id) {
+                    $product['quantity'] += $item->quantity;
+                    $product['item'] = sprintf('%s - %s', $item->product, $product['quantity']);
+                    $product['finish'] = false;
+                }
+                return $product;
+            });
+        }
+
         $this->reset('item');
         $this->quantity = 1;
     }
@@ -53,11 +85,47 @@ class Index extends Component
         $this->items = collect();
     }
 
+    public function toogle(Item $item): void
+    {
+        $item->update([
+            'finish' => !$item->finish,
+        ]);
+
+        $this->items = $this->items->map(function ($product) use ($item) {
+            if ($product['id'] === $item->id) {
+                $product['finish'] = !$product['finish'];
+            }
+            return $product;
+        });
+    }
+
+    public function delete(Item $item): void
+    {
+        $item->delete();
+        $this->items = $this->items->filter(fn ($product) => $product['id'] !== $item->id);
+    }
+
+    public function edit(Item $item): void
+    {
+        $this->item = $item->product;
+        $this->quantity = $item->quantity;
+    }
+
     protected function rules(): array
     {
         return [
             'item' => 'required|string',
             'quantity' => 'required|integer|min:1'
+        ];
+    }
+
+    private function setItem(int $id, string $item, int $quantity, bool $finish): array
+    {
+        return [
+            'id' => $id,
+            'item' => sprintf('%s - %s', $item, $quantity),
+            'quantity' => $quantity,
+            'finish' => $finish,
         ];
     }
 }

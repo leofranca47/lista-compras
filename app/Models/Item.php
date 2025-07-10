@@ -11,5 +11,10 @@ class Item extends Model
     use SoftDeletes;
     use HasFactory;
 
-    protected $fillable = ['product', 'quantity', 'user_id'];
+    protected $fillable = [
+        'product',
+        'quantity',
+        'user_id',
+        'finish',
+    ];
 }
