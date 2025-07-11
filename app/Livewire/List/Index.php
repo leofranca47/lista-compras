@@ -7,9 +7,12 @@ use App\Models\User;
 use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Support\Collection;
 use Livewire\Component;
+use TallStackUi\Traits\Interactions;
 
 class Index extends Component
 {
+    use Interactions;
+
     public string $item;
     public Collection $items;
     public int $quantity = 1;
@@ -78,10 +81,19 @@ class Index extends Component
         $this->quantity = 1;
     }
 
+    public function confirmClear(): void
+    {
+        $this->dialog()
+            ->question('Aviso!', 'Tem certeza que deseja limpar a lista?')
+            ->confirm('OK', 'clear')
+            ->cancel('Cancelar')
+            ->send();
+    }
+
     public function clear(): void
     {
         Item::whereUserId($this->user->id)->get()->each(fn ($item) => $item->delete());
-        $this->reset();
+        $this->resetExcept('user');
         $this->items = collect();
     }
 
@@ -99,6 +111,14 @@ class Index extends Component
         });
     }
 
+    public function confirmDelete(Item $item): void
+    {
+        $this->dialog()
+            ->question('Aviso!', sprintf('Tem certeza que deseja excluir %s?', $item->product))
+            ->confirm('OK', 'delete', $item->id)
+            ->cancel('Cancelar')
+            ->send();
+    }
     public function delete(Item $item): void
     {
         $item->delete();
@@ -116,6 +136,15 @@ class Index extends Component
         return [
             'item' => 'required|string',
             'quantity' => 'required|integer|min:1'
+        ];
+    }
+
+    protected function messages(): array
+    {
+        return [
+            'item.required' => 'O campo Descrição é obrigatório!',
+            'quantity.required' => 'O campo Quantidade é obrigatório!',
+            'quantity.min' => 'A quantidade minima é 1!',
         ];
     }
 

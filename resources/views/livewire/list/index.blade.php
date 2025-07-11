@@ -17,7 +17,7 @@
                 <x-button type="submit" class="flex-2">
                     Adicionar
                 </x-button>
-                <x-button wire:click="clear" color="red" class="flex-1">
+                <x-button wire:click="confirmClear" color="red" class="flex-1">
                     <x-icon name="trash" class="h-5 w-5"/>
                 </x-button>
             </div>
@@ -43,7 +43,7 @@
                             class="h-5 w-5 cursor-pointer"
                         />
                         <x-icon
-                            wire:click="delete({{ data_get($product, 'id') }})"
+                            wire:click="confirmDelete({{ data_get($product, 'id') }})"
                             color="#F87171"
                             name="trash"
                             class="h-5 w-5 cursor-pointer"
