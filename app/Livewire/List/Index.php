@@ -17,6 +17,7 @@ class Index extends Component
     public Collection $items;
     public int $quantity = 1;
     public User $user;
+    public ?int $itemId = null;
 
     public function mount(#[CurrentUser]User $user): void
     {
@@ -44,19 +45,49 @@ class Index extends Component
     public function save(): void
     {
         $this->validate();
-        $item = Item::updateOrCreate(
-            [
+
+        if ($this->itemId !== null) {
+            $item = Item::find($this->itemId);
+            $item->update([
                 'product' => mb_strtoupper($this->item),
-            ],
-            [
-            'quantity' => $this->quantity,
-            'user_id' => $this->user->id,
-        ]
-        );
+                'quantity' => $this->quantity,
+            ]);
+            $this->items = $this->items->map(function ($product) use ($item) {
+                if ($product['id'] === $item->id) {
+                    $product['quantity'] = $item->quantity;
+                    $product['item'] = sprintf('%s - %s', $item->product, $product['quantity']);
+                    $product['finish'] = false;
+                }
+                return $product;
+            });
+            $this->reset('item', 'itemId');
+            $this->quantity = 1;
+            return;
+        }
+
+        $item = Item::whereProduct(mb_strtoupper($this->item))
+            ->whereUserId(auth()->user()->id)
+            ->first();
+
+        if (empty($item)) {
+            Item::create([
+                    'product' => mb_strtoupper($this->item),
+                    'quantity' => $this->quantity,
+                    'user_id' => $this->user->id,
+            ]);
+        } else {
+            $item->update([
+                'quantity' => $item->quantity + $this->quantity
+            ]);
+        }
+
+        $item = Item::whereProduct(mb_strtoupper($this->item))
+            ->whereUserId(auth()->user()->id)
+            ->first();
 
         $existsItem = array_filter($this->items->toArray(), function ($product) use ($item) {
             if ($product['id'] === $item->id) {
-                return$product;
+                return $product;
             }
         });
         if (empty($existsItem)) {
@@ -69,7 +100,7 @@ class Index extends Component
         } else {
             $this->items = $this->items->map(function ($product) use ($item) {
                 if ($product['id'] === $item->id) {
-                    $product['quantity'] += $item->quantity;
+                    $product['quantity'] = $item->quantity;
                     $product['item'] = sprintf('%s - %s', $item->product, $product['quantity']);
                     $product['finish'] = false;
                 }
@@ -97,7 +128,7 @@ class Index extends Component
         $this->items = collect();
     }
 
-    public function toogle(Item $item): void
+    public function toggle(Item $item): void
     {
         $item->update([
             'finish' => !$item->finish,
@@ -129,6 +160,7 @@ class Index extends Component
     {
         $this->item = $item->product;
         $this->quantity = $item->quantity;
+        $this->itemId = $item->id;
     }
 
     protected function rules(): array

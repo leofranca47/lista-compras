@@ -30,12 +30,19 @@
                 <x-card class="flex justify-between">
                     <li
                         class="{{ data_get($product, 'finish') ? 'line-through text-gray-400' : '' }} cursor-pointer"
-                        wire:click="toogle({{ data_get($product, 'id') }})"
                         wire:key="{{ data_get($product, 'id') }}"
                     >
                         {{ data_get($product, 'item') }}
                     </li>
                     <div class="flex gap-4">
+                        @if(data_get($product, 'finish'))
+                            <x-toggle
+                                wire:click="toggle({{ data_get($product, 'id') }})"
+                                checked
+                            />
+                        @else
+                            <x-toggle wire:click="toggle({{ data_get($product, 'id') }})" />
+                        @endif
                         <x-icon
                             wire:click="edit({{ data_get($product, 'id') }})"
                             color="#60A5FA"
