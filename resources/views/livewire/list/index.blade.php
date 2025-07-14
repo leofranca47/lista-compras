@@ -37,6 +37,7 @@
                     <div class="flex gap-4">
                         @if(data_get($product, 'finish'))
                             <x-toggle
+                                wire:key="{{ data_get($product, 'id') }}"
                                 wire:click="toggle({{ data_get($product, 'id') }})"
                                 checked
                             />

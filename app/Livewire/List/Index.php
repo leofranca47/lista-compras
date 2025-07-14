@@ -51,6 +51,7 @@ class Index extends Component
             $item->update([
                 'product' => mb_strtoupper($this->item),
                 'quantity' => $this->quantity,
+                'finish' => false,
             ]);
             $this->items = $this->items->map(function ($product) use ($item) {
                 if ($product['id'] === $item->id) {
