@@ -29,25 +29,25 @@
         </div>
     </form>
     @section('scripts')
-        <script>
-            window.onload = function () {
-                const savedEmail = localStorage.getItem('rememberedEmail');
-                if (savedEmail) {
-                    document.getElementById('email').value = savedEmail;
-                    document.getElementById('remember_me').checked = true;
-                }
-            };
+{{--        <script>--}}
+{{--            window.onload = function () {--}}
+{{--                const savedEmail = localStorage.getItem('rememberedEmail');--}}
+{{--                if (savedEmail) {--}}
+{{--                    document.getElementById('email').value = savedEmail;--}}
+{{--                    document.getElementById('remember_me').checked = true;--}}
+{{--                }--}}
+{{--            };--}}
 
-            document.querySelector('form').addEventListener('submit', function () {
-                const email = document.getElementById('email').value;
-                const remember = document.getElementById('remember_me').checked;
+{{--            document.querySelector('form').addEventListener('submit', function () {--}}
+{{--                const email = document.getElementById('email').value;--}}
+{{--                const remember = document.getElementById('remember_me').checked;--}}
 
-                if (remember) {
-                    localStorage.setItem('rememberedEmail', email);
-                } else {
-                    localStorage.removeItem('rememberedEmail');
-                }
-            });
-        </script>
+{{--                if (remember) {--}}
+{{--                    localStorage.setItem('rememberedEmail', email);--}}
+{{--                } else {--}}
+{{--                    localStorage.removeItem('rememberedEmail');--}}
+{{--                }--}}
+{{--            });--}}
+{{--        </script>--}}
     @endsection
 </x-guest-layout>
