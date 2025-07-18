@@ -7,7 +7,7 @@
         @csrf
 
         <div class="space-y-4">
-            <x-input label="Email *" type="email" name="email" :value="old('email', 'test@example.com')" required autofocus autocomplete="username" />
+            <x-input label="Email *" type="email" id="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
 
             <x-password label="Senha *" type="password" name="password" required autocomplete="current-password" />
         </div>
@@ -28,4 +28,26 @@
             </x-button>
         </div>
     </form>
+    @section('scripts')
+        <script>
+            window.onload = function () {
+                const savedEmail = localStorage.getItem('rememberedEmail');
+                if (savedEmail) {
+                    document.getElementById('email').value = savedEmail;
+                    document.getElementById('remember_me').checked = true;
+                }
+            };
+
+            document.querySelector('form').addEventListener('submit', function () {
+                const email = document.getElementById('email').value;
+                const remember = document.getElementById('remember_me').checked;
+
+                if (remember) {
+                    localStorage.setItem('rememberedEmail', email);
+                } else {
+                    localStorage.removeItem('rememberedEmail');
+                }
+            });
+        </script>
+    @endsection
 </x-guest-layout>

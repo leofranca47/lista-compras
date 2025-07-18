@@ -23,6 +23,7 @@
             </div>
         </div>
 
+        @yield('scripts')
         @livewireScripts
     </body>
 </html>
