@@ -21,7 +21,7 @@ class AuthenticatedSessionController
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('list.index', absolute: false));
+        return redirect()->intended(route('dashboard', absolute: false));
     }
 
     public function destroy(Request $request): RedirectResponse

@@ -9,6 +9,8 @@ use App\Livewire\Users\Index;
 Route::get('/', [AuthenticatedSessionController::class, 'create']);
 
 Route::middleware(['auth'])->group(function () {
+    Route::view('/dashboard', 'listBuy')->name('dashboard');
+
     Route::get('/users', Index::class)->name('users.index');
 
     Route::get('/user/profile', Profile::class)->name('user.profile');
