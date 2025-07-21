@@ -51,7 +51,7 @@
         <x-slot:menu>
             <x-side-bar smart collapsible>
                 <x-slot:brand>
-                    <div class="mt-8 flex items-center justify-center">1
+                    <div class="mt-8 flex items-center justify-center">
                         <img src="{{ asset('/assets/images/cesta.png') }}" width="40" height="40" />
                     </div>
                 </x-slot:brand>
