@@ -17,9 +17,7 @@
                 <x-button type="submit" class="flex-2">
                     Adicionar
                 </x-button>
-                <x-button wire:click="confirmClear" color="red" class="flex-1">
-                    <x-icon name="trash" class="h-5 w-5"/>
-                </x-button>
+                <livewire:list.trash />
             </div>
         </form>
 

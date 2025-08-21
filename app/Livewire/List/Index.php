@@ -6,6 +6,7 @@ use App\Models\Item;
 use App\Models\User;
 use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Support\Collection;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use TallStackUi\Traits\Interactions;
 
@@ -22,19 +23,7 @@ class Index extends Component
     public function mount(#[CurrentUser]User $user): void
     {
         $this->user = $user;
-        $items = Item::whereUserId($user->id)->get();
-
-        if ($items->isEmpty()) {
-            $this->items = collect();
-            return;
-        }
-
-        $this->items = $items->map(fn ($item) => $this->setItem(
-            $item->id,
-            $item->product,
-            $item->quantity,
-            $item->finish
-        ));
+        $this->fillItensByUser($user);
     }
 
     public function render()
@@ -113,22 +102,6 @@ class Index extends Component
         $this->quantity = 1;
     }
 
-    public function confirmClear(): void
-    {
-        $this->dialog()
-            ->question('Aviso!', 'Tem certeza que deseja limpar a lista?')
-            ->confirm('OK', 'clear')
-            ->cancel('Cancelar')
-            ->send();
-    }
-
-    public function clear(): void
-    {
-        Item::whereUserId($this->user->id)->get()->each(fn ($item) => $item->delete());
-        $this->resetExcept('user');
-        $this->items = collect();
-    }
-
     public function toggle(Item $item): void
     {
         $item->update([
@@ -164,6 +137,19 @@ class Index extends Component
         $this->itemId = $item->id;
     }
 
+    #[On('CLEAR::ALL')]
+    public function clearAll()
+    {
+        $this->resetExcept('user');
+        $this->items = collect();
+    }
+
+    #[On('CLEAR::SELECTED')]
+    public function clearSelected()
+    {
+        $this->items = $this->items->filter(fn ($product) => !$product['finish']);
+    }
+
     protected function rules(): array
     {
         return [
@@ -179,6 +165,23 @@ class Index extends Component
             'quantity.required' => 'O campo Quantidade é obrigatório!',
             'quantity.min' => 'A quantidade minima é 1!',
         ];
+    }
+
+    private function fillItensByUser(User $user): void
+    {
+        $items = Item::whereUserId($user->id)->get();
+
+        if ($items->isEmpty()) {
+            $this->items = collect();
+            return;
+        }
+
+        $this->items = $items->map(fn ($item) => $this->setItem(
+            $item->id,
+            $item->product,
+            $item->quantity,
+            $item->finish
+        ));
     }
 
     private function setItem(int $id, string $item, int $quantity, bool $finish): array
