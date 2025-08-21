@@ -1,4 +1,4 @@
-<div class="flex-1">
+<div class="flex-2">
     <x-modal title="Escolha o que deseja apagar" id="modal-trash" center>
         <div class="flex flex-col gap-4">
             <x-button color="red" x-on:click="$modalClose('modal-trash')"  wire:click="confirmClearSelected">
