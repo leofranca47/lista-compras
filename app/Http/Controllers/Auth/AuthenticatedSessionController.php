@@ -8,10 +8,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
+use function auth;
+
 class AuthenticatedSessionController
 {
-    public function create(): View
+    public function create(): View|RedirectResponse
     {
+        if (auth()->check()) {
+            return redirect()->route('dashboard');
+        }
+
         return view('auth.login');
     }
 
