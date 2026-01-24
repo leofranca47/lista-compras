@@ -27,7 +27,7 @@ class AuthenticatedSessionController
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        return redirect()->intended(default: route('dashboard', absolute: false));
     }
 
     public function destroy(Request $request): RedirectResponse
