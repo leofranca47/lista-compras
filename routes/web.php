@@ -6,7 +6,7 @@ use App\Livewire\User\Profile;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Users\Index;
 
-Route::get('/', [AuthenticatedSessionController::class, 'create']);
+Route::get('/', [AuthenticatedSessionController::class, 'create'])->middleware('nocache');
 
 Route::middleware(['auth'])->group(function () {
     Route::view('/dashboard', 'listBuy')->name('dashboard');
