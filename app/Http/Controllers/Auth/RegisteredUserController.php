@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
@@ -36,6 +37,8 @@ class RegisteredUserController
 
         Auth::login($user);
 
-        return redirect(route('index', absolute: false));
+        Session::regenerate();
+
+        return redirect()->intended(route('dashboard', absolute: false));
     }
 }
