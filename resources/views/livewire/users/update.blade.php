@@ -1,17 +1,17 @@
 <div>
-    <x-modal :title="__('Update User: #:id', ['id' => $user?->id])" wire>
+    <x-modal :title="__('Atualizar Usuário: #:id', ['id' => $user?->id])" wire center>
         <form id="user-update-{{ $user?->id }}" wire:submit="save" class="space-y-4">
             <div>
-                <x-input label="{{ __('Name') }} *" wire:model="user.name" required />
+                <x-input label="{{ __('Nome') }} *" wire:model="user.name" required />
             </div>
 
             <div>
-                <x-input label="{{ __('Email') }} *" wire:model="user.email" required />
+                <x-input label="{{ __('E-mail') }} *" wire:model="user.email" required />
             </div>
 
             <div>
-                <x-password :label="__('Password')"
-                            hint="The password will only be updated if you set the value of this field"
+                <x-password :label="__('Senha')"
+                            hint="A senha só será atualizada se você preencher este campo"
                             wire:model="password"
                             rules
                             generator
@@ -19,12 +19,20 @@
             </div>
 
             <div>
-                <x-password :label="__('Password')" wire:model="password_confirmation" rules />
+                <x-password :label="__('Confirmar Senha')" wire:model="password_confirmation" rules />
+            </div>
+
+            <div>
+                <x-select.styled :label="__('Perfil')"
+                                 :options="['admin', 'user']"
+                                 wire:model="role"
+                                 required
+                />
             </div>
         </form>
         <x-slot:footer>
             <x-button type="submit" form="user-update-{{ $user?->id }}" loading="save">
-                @lang('Save')
+                @lang('Salvar')
             </x-button>
         </x-slot:footer>
     </x-modal>

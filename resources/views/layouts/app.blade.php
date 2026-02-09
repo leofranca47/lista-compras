@@ -55,7 +55,9 @@
                         <img src="{{ asset('/assets/images/cesta.png') }}" width="40" height="40" />
                     </div>
                 </x-slot:brand>
-{{--                <x-side-bar.item text="Usuários" icon="users" :route="route('users.index')" />--}}
+                @role('admin')
+                <x-side-bar.item text="Usuários" icon="users" :route="route('users.index')" />
+                @endrole
                 <x-side-bar.item text="Lista de Compras" icon="list-bullet" :route="route('list.index')" />
             </x-side-bar>
         </x-slot:menu>
