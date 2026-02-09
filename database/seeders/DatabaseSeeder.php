@@ -16,17 +16,17 @@ class DatabaseSeeder extends Seeder
         ]);
 
 
-        User::get()->each(function ($user) {
-
-            if ($user->email === 'casa@casa.com') {
-                $user->assignRole('admin');
-            } else {
-                $user->assignRole('user');
-                if($user->created_at->isToday()){
-                    $user->delete();
-                }
-            }
-        });
+//        User::get()->each(function ($user) {
+//
+//            if ($user->email === 'casa@casa.com') {
+//                $user->assignRole('admin');
+//            } else {
+//                $user->assignRole('user');
+//                if($user->created_at->isToday()){
+//                    $user->delete();
+//                }
+//            }
+//        });
 
         // $user = User::factory()->create([
         //     'name' => 'Test User',
