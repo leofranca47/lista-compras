@@ -26,9 +26,10 @@ class Index extends Component
 
     public array $headers = [
         ['index' => 'id', 'label' => '#'],
-        ['index' => 'name', 'label' => 'Name'],
+        ['index' => 'name', 'label' => 'Nome'],
         ['index' => 'email', 'label' => 'E-mail'],
-        ['index' => 'created_at', 'label' => 'Created'],
+        ['index' => 'role', 'label' => 'Perfil', 'sortable' => false],
+        ['index' => 'created_at', 'label' => 'Criado em'],
         ['index' => 'action', 'sortable' => false],
     ];
 
@@ -44,6 +45,7 @@ class Index extends Component
             ->whereNotIn('id', [Auth::id()])
             ->when($this->search !== null, fn (Builder $query) => $query->whereAny(['name', 'email'], 'like', '%'.trim($this->search).'%'))
             ->orderBy(...array_values($this->sort))
+            ->with('roles')
             ->paginate($this->quantity)
             ->withQueryString();
     }

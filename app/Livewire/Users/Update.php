@@ -21,6 +21,8 @@ class Update extends Component
 
     public bool $modal = false;
 
+    public ?string $role = null;
+
     public function render(): View
     {
         return view('livewire.users.update');
@@ -30,6 +32,7 @@ class Update extends Component
     public function load(User $user): void
     {
         $this->user = $user;
+        $this->role = $user->roles->first()?->name ?? 'user';
 
         $this->modal = true;
     }
@@ -54,6 +57,11 @@ class Update extends Component
                 'string',
                 'min:8',
                 'confirmed'
+            ],
+            'role' => [
+                'required',
+                'string',
+                'in:admin,user'
             ]
         ];
     }
@@ -64,6 +72,8 @@ class Update extends Component
 
         $this->user->password = when($this->password !== null, bcrypt($this->password), $this->user->password);
         $this->user->save();
+
+        $this->user->syncRoles($this->role);
 
         $this->dispatch('updated');
 

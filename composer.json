@@ -21,6 +21,7 @@
         "laravel/tinker": "^2.10.1",
         "livewire/livewire": "^3.0.0",
         "silviolleite/laravelpwa": "^2.0",
+        "spatie/laravel-permission": "^6.24",
         "tallstackui/tallstackui": "^2.9.0"
     },
     "require-dev": {

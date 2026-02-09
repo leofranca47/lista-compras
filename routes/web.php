@@ -11,7 +11,7 @@ Route::get('/', [AuthenticatedSessionController::class, 'create'])->middleware('
 Route::middleware(['auth'])->group(function () {
     Route::view('/dashboard', 'listBuy')->name('dashboard');
 
-    Route::get('/users', Index::class)->name('users.index');
+    Route::get('/users', Index::class)->name('users.index')->middleware('role:admin');
 
     Route::get('/user/profile', Profile::class)->name('user.profile');
 

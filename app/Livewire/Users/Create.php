@@ -20,6 +20,8 @@ class Create extends Component
 
     public bool $modal = false;
 
+    public ?string $role = 'user';
+
     public function mount(): void
     {
         $this->user = new User();
@@ -50,6 +52,11 @@ class Create extends Component
                 'string',
                 'min:8',
                 'confirmed'
+            ],
+            'role' => [
+                'required',
+                'string',
+                'in:admin,user'
             ]
         ];
     }
@@ -61,6 +68,8 @@ class Create extends Component
         $this->user->password = bcrypt($this->password);
         $this->user->email_verified_at = now();
         $this->user->save();
+
+        $this->user->assignRole($this->role);
 
         $this->dispatch('created');
 

@@ -1,18 +1,18 @@
 <div>
-    <x-button :text="__('Create New User')" wire:click="$toggle('modal')" sm />
+    <x-button :text="__('Criar Novo Usuário')" wire:click="$toggle('modal')" sm />
 
-    <x-modal :title="__('Create New User')" wire x-on:open="setTimeout(() => $refs.name.focus(), 250)">
+    <x-modal :title="__('Criar Novo Usuário')" wire center x-on:open="setTimeout(() => $refs.name.focus(), 250)">
         <form id="user-create" wire:submit="save" class="space-y-4">
             <div>
-                <x-input label="{{ __('Name') }} *" x-ref="name" wire:model="user.name" required />
+                <x-input label="{{ __('Nome') }} *" x-ref="name" wire:model="user.name" required />
             </div>
 
             <div>
-                <x-input label="{{ __('Email') }} *" wire:model="user.email" required />
+                <x-input label="{{ __('E-mail') }} *" wire:model="user.email" required />
             </div>
 
             <div>
-                <x-password label="{{ __('Password') }} *"
+                <x-password label="{{ __('Senha') }} *"
                             wire:model="password"
                             rules
                             generator
@@ -21,12 +21,20 @@
             </div>
 
             <div>
-                <x-password :label="__('Password')" wire:model="password_confirmation" rules required />
+                <x-password :label="__('Confirmar Senha')" wire:model="password_confirmation" rules required />
+            </div>
+
+            <div>
+                <x-select.styled :label="__('Perfil')"
+                                 :options="['admin', 'user']"
+                                 wire:model="role"
+                                 required
+                />
             </div>
         </form>
         <x-slot:footer>
             <x-button type="submit" form="user-create">
-                @lang('Save')
+                @lang('Salvar')
             </x-button>
         </x-slot:footer>
     </x-modal>
