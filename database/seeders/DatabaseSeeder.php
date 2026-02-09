@@ -15,11 +15,16 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
         ]);
 
-        User::factory(24)->create()->each(function ($user) {
+
+        User::get()->each(function ($user) {
+
             if ($user->email === 'casa@casa.com') {
                 $user->assignRole('admin');
             } else {
                 $user->assignRole('user');
+                if($user->created_at->isToday()){
+                    $user->delete();
+                }
             }
         });
 
