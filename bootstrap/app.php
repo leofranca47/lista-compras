@@ -11,6 +11,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->trustProxies(at: '*');
         $middleware->alias([
             'nocache' => \App\Http\Middleware\NoCacheMiddleware::class,
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
